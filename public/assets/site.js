@@ -332,7 +332,9 @@
           "button",
           { type: "button", class: "tile rv", onclick: () => openService(s) },
           icon(s.icon),
-          h("b", { text: tx(s.name) }),
+          // Phones show the short name so three tiles fit in a row; larger screens show the full name.
+          h("b", { class: "full", text: tx(s.name) }),
+          h("b", { class: "short", text: tx(s.short) || tx(s.name) }),
           h("small", { text: tx(s.desc) })
         )
       )
