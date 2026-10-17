@@ -26,12 +26,12 @@
     <link rel="apple-touch-icon" href="/brand/icon-180.png" />
     <link rel="preload" href="/brand/mark.webp" as="image" type="image/webp" />
     <link rel="stylesheet" href="/fonts/fonts.css?v=1" />
-    <link rel="stylesheet" href="/assets/site.css?v=4" />
+    <link rel="stylesheet" href="/assets/site.css?v=5" />
     <script type="application/ld+json">
       {}
     </script>
     <script src="/assets/icons.js?v=2" defer></script>
-    <script src="/assets/site.js?v=3" defer></script>
+    <script src="/assets/site.js?v=4" defer></script>
   </head>
   <body>
     <a class="skip" href="#main" data-t="skip">Zum Inhalt</a>
@@ -113,9 +113,11 @@
       <section class="sec about" id="about" aria-labelledby="aboutTitle">
         <div class="about-media" id="aboutMedia"></div>
         <div class="about-body">
-          <span class="kicker" id="aboutRole"></span>
+          <span class="kicker" data-t="navAbout">Über uns</span>
           <h2 id="aboutTitle">Über uns</h2>
+          <p class="about-role" id="aboutRole"></p>
           <div class="about-text" id="aboutText"></div>
+          <button class="btn ghost more" type="button" id="aboutMore" aria-expanded="false" aria-controls="aboutText" hidden></button>
           <div class="stats" id="aboutStats"></div>
           <div class="about-links" id="aboutLinks"></div>
         </div>

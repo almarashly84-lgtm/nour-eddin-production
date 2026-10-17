@@ -215,7 +215,7 @@ const slug = (v, fallback) => {
 };
 const imgPath = (v) => {
   const s = str(v, 120);
-  return /^\/media\/[a-z0-9-]+\.(webp|jpg|png)$/.test(s) || /^art\/[a-z0-9-]+\.svg$/.test(s) ? s : "";
+  return /^\/media\/[a-z0-9-]+\.(webp|jpg|png)$/.test(s) || /^art\/[a-z0-9-]+\.(svg|webp|jpg)$/.test(s) ? s : "";
 };
 const audioPath = (v) => {
   const s = str(v, 120);
@@ -327,7 +327,8 @@ export function sanitizeSite(input) {
   const a = input.about || {};
   const about = {
     title: i18n(a.title, 80),
-    role: i18n(a.role, 80),
+    role: i18n(a.role, 160),
+    short: i18n(a.short, 700),
     text: i18n(a.text, 3000),
     photo: imgPath(a.photo),
     stats: (Array.isArray(a.stats) ? a.stats : [])
@@ -447,7 +448,15 @@ async function homePage(req, env, url) {
     description: desc,
     telephone: site.phones[0] || undefined,
     email: site.email || undefined,
-    address: { "@type": "PostalAddress", addressLocality: "Wien", addressCountry: "AT" },
+    address: { "@type": "PostalAddress", streetAddress: site.legal.address || undefined, addressLocality: "Wien", addressCountry: "AT" },
+    founder: site.legal.owner
+      ? {
+          "@type": "Person",
+          name: site.legal.owner,
+          jobTitle: T(site.about.role) || undefined,
+          image: site.about.photo ? origin + asset(site.about.photo) : undefined
+        }
+      : undefined,
     areaServed: ["Wien", "Österreich"],
     sameAs: Object.values(site.social).filter(Boolean),
     hasOfferCatalog: {
@@ -539,6 +548,8 @@ async function homePage(req, env, url) {
     })
     .transform(new Response(res.body, { status: res.status, headers: htmlHeaders(res, lang) }));
 }
+
+const asset = (p) => (p.startsWith("/") ? p : "/" + p);
 
 function htmlHeaders(res, lang) {
   const h = new Headers(res.headers); // keeps the security headers from public/_headers

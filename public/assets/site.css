@@ -1009,6 +1009,105 @@ body.has-social {
   object-fit: contain;
   border-radius: 0;
 }
+/* Round portrait with a gold frame and a slowly turning ring */
+.about-media.round {
+  aspect-ratio: 1;
+  max-width: 380px;
+}
+.about-media.round::before {
+  display: none;
+}
+.portrait {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  padding: 10px;
+  background: radial-gradient(circle at 50% 40%, rgba(214, 178, 94, 0.22), transparent 70%);
+}
+.portrait img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 20%;
+  border-radius: 50%;
+  border: 3px solid transparent;
+  background: var(--au) border-box;
+  box-shadow:
+    0 0 0 6px rgba(12, 11, 10, 0.9),
+    0 0 0 7px rgba(214, 178, 94, 0.55),
+    0 30px 60px -20px rgba(0, 0, 0, 0.8),
+    0 0 60px rgba(214, 178, 94, 0.25);
+  transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.portrait:hover img {
+  transform: scale(1.03);
+}
+.orbit-ring {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(214, 178, 94, 0.45);
+  animation: ring-spin 40s linear infinite;
+}
+.orbit-ring::before,
+.orbit-ring::after {
+  content: "";
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--au);
+  transform: rotate(45deg);
+  box-shadow: 0 0 12px rgba(244, 221, 148, 0.8);
+}
+.orbit-ring::before {
+  top: 14%;
+  left: 12%;
+}
+.orbit-ring::after {
+  bottom: 14%;
+  right: 12%;
+}
+@keyframes ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.about-role {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin: -4px 0 18px;
+  color: var(--gold-hi);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.about-role span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.about-role span::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--au);
+  transform: rotate(45deg);
+  flex: none;
+}
+.more {
+  min-height: 42px;
+  padding: 0 20px;
+  font-size: 0.92rem;
+  margin-top: 2px;
+}
+@media (max-width: 859px) {
+  .about-body {
+    text-align: start;
+  }
+}
 .about-body h2 {
   font-size: clamp(1.6rem, 5vw, 2.5rem);
   margin: 8px 0 14px;

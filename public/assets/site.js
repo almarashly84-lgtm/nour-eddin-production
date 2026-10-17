@@ -55,6 +55,8 @@
   const UI = {
     ar: {
       skip: "انتقل إلى المحتوى",
+      bioMore: "اقرأ السيرة الكاملة",
+      bioLess: "إخفاء السيرة الكاملة",
       enter: "ادخل",
       enterQuiet: "الدخول بدون موسيقى",
       navServices: "الخدمات",
@@ -108,6 +110,8 @@
     },
     de: {
       skip: "Zum Inhalt",
+      bioMore: "Ganze Biografie lesen",
+      bioLess: "Biografie einklappen",
       enter: "Eintreten",
       enterQuiet: "Ohne Musik eintreten",
       navServices: "Leistungen",
@@ -162,6 +166,8 @@
     },
     en: {
       skip: "Skip to content",
+      bioMore: "Read the full biography",
+      bioLess: "Show less",
       enter: "Enter",
       enterQuiet: "Enter without music",
       navServices: "Services",
@@ -400,19 +406,41 @@
     );
     observe();
   }
+  let aboutOpen = false;
   function renderAbout() {
     const a = site.about;
-    $("#aboutRole").textContent = tx(a.role);
-    $("#aboutTitle").textContent = tx(a.title) || t.navAbout;
-    $("#aboutText").replaceChildren(
-      ...tx(a.text)
+    const paras = (txt) =>
+      txt
         .split(/\n+/)
         .filter(Boolean)
-        .map((p) => h("p", { text: p }))
+        .map((p) => h("p", { text: p }));
+    const short = tx(a.short),
+      full = tx(a.text);
+    $("#aboutTitle").textContent = tx(a.title) || t.navAbout;
+    // The role line uses "|" between titles; each title becomes its own gold-dotted item.
+    $("#aboutRole").replaceChildren(
+      ...tx(a.role)
+        .split("|")
+        .map((r) => r.trim())
+        .filter(Boolean)
+        .map((r) => h("span", { text: r }))
     );
-    $("#aboutMedia").replaceChildren(
+    const more = $("#aboutMore");
+    const showFull = !short || aboutOpen;
+    $("#aboutText").replaceChildren(...paras(showFull ? full : short));
+    more.hidden = !short || !full;
+    more.textContent = aboutOpen ? t.bioLess : t.bioMore;
+    more.setAttribute("aria-expanded", String(aboutOpen));
+    const media = $("#aboutMedia");
+    media.classList.toggle("round", !!a.photo);
+    media.replaceChildren(
       a.photo
-        ? h("img", { src: asset(a.photo), alt: tx(a.title), loading: "lazy" })
+        ? h(
+            "div",
+            { class: "portrait" },
+            h("span", { class: "orbit-ring", "aria-hidden": "true" }),
+            h("img", { src: asset(a.photo), alt: tx(a.title), width: "900", height: "900", loading: "lazy", decoding: "async" })
+          )
         : h("div", { class: "ph" }, h("img", { src: "/brand/logo-full.webp", alt: "", width: "805", height: "1000", loading: "lazy" }))
     );
     $("#aboutStats").replaceChildren(
@@ -598,6 +626,12 @@
     }
     openDialog($("#viewer"));
   }
+
+  $("#aboutMore").addEventListener("click", () => {
+    aboutOpen = !aboutOpen;
+    renderAbout();
+    if (!aboutOpen) $("#about").scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
+  });
 
   /* ------------------------------------------------------------ contact form */
   function buildMessage() {
