@@ -22,9 +22,9 @@
     "en": "wedding videographer Vienna, video production Vienna, podcast studio Vienna, event coverage Vienna, corporate film Vienna, commercial video Vienna, Arabic wedding videographer Austria, online advertising Vienna, web design Vienna, printing Vienna, laser engraving Vienna, portrait photographer Vienna"
   },
   "demoNote": {
-    "ar": "نسخة تجريبية للعرض: أرقام التواصل والصور مؤقتة.",
-    "de": "Demo-Version: Kontaktdaten und Bilder sind vorläufig.",
-    "en": "Demo version: contact details and images are placeholders."
+    "ar": "نسخة تجريبية: الصور والأعمال المعروضة مؤقتة.",
+    "de": "Demo-Version: Die gezeigten Bilder und Arbeiten sind vorläufig.",
+    "en": "Demo version: the images and works shown are placeholders."
   },
   "intro": {
     "enabled": true,
@@ -604,19 +604,19 @@
       }
     }
   ],
-  "phones": ["+43 681 20875280"],
-  "whatsapp": "4368120875280",
-  "email": "info@alaadigital.at",
+  "phones": ["+43 660 7383207"],
+  "whatsapp": "436607383207",
+  "email": "noureddinshow@gmail.com",
   "city": {
     "ar": "فيينا، النمسا",
     "de": "Wien, Österreich",
     "en": "Vienna, Austria"
   },
   "social": {
-    "youtube": "",
-    "facebook": "",
-    "instagram": "https://www.instagram.com/nour_show_official/",
-    "tiktok": ""
+    "youtube": "https://youtube.com/@nour_show_official",
+    "facebook": "https://www.facebook.com/share/18h41ZvQur/",
+    "instagram": "https://www.instagram.com/nour_show_official",
+    "tiktok": "https://www.tiktok.com/@noureddin_production"
   },
   "defaultLang": "de",
   "messageLang": "ar",
@@ -625,8 +625,8 @@
     "owner": "",
     "legalForm": "",
     "address": "",
-    "phone": "",
-    "email": "",
+    "phone": "+43 660 7383207",
+    "email": "noureddinshow@gmail.com",
     "uid": "",
     "registerNo": "",
     "registerCourt": "",
