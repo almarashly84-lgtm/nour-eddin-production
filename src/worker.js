@@ -33,6 +33,11 @@ let schemaReady = false;
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
+    // One address for Google: www.example.com always forwards to example.com
+    if (url.hostname.startsWith("www.")) {
+      url.hostname = url.hostname.slice(4);
+      return Response.redirect(url.toString(), 301);
+    }
     try {
       if (!schemaReady) {
         await env.DB.exec(SCHEMA.replace(/\n/g, " "));
