@@ -1,72 +1,79 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="robots" content="noindex, nofollow">
-<title>لوحة التحكم – نور الدين للإنتاج</title>
-<link rel="icon" href="/brand/favicon-48.png" type="image/png">
-<link rel="stylesheet" href="/fonts/fonts.css?v=1">
-<link rel="stylesheet" href="admin.css?v=1">
-<script src="/assets/icons.js?v=1" defer></script>
-<script src="admin.js?v=1" defer></script>
-</head>
-<body>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>لوحة التحكم – نور الدين للإنتاج الإعلامي والفني</title>
+    <link rel="icon" href="/brand/favicon-48.png" type="image/png" />
+    <link rel="stylesheet" href="/fonts/fonts.css?v=1" />
+    <link rel="stylesheet" href="admin.css?v=1" />
+    <script src="/assets/icons.js?v=1" defer></script>
+    <script src="admin.js?v=1" defer></script>
+  </head>
+  <body>
+    <!-- Login -->
+    <main class="gate" id="gate" aria-label="تسجيل الدخول" hidden>
+      <form class="gate-card" id="loginForm" novalidate>
+        <img src="/brand/icon-180.png" alt="" width="88" height="88" />
+        <h1>لوحة التحكم</h1>
+        <p class="muted">أدخل كلمة السر لإدارة الموقع والموسيقى والخدمات والأعمال.</p>
+        <label class="lbl" for="loginPass">كلمة السر</label>
+        <div class="pass-wrap">
+          <input class="in" id="loginPass" type="password" autocomplete="current-password" required />
+          <button type="button" class="eye" data-eye="loginPass" aria-label="إظهار كلمة السر">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" />
+              <circle cx="12" cy="12" r="3" />
+            </svg>
+          </button>
+        </div>
+        <p class="err" id="loginErr" role="alert" hidden></p>
+        <button class="btn primary wide" type="submit">دخول</button>
+        <a class="muted small" href="/">الرجوع إلى الموقع</a>
+      </form>
+    </main>
 
-<!-- Login -->
-<main class="gate" id="gate" aria-label="تسجيل الدخول" hidden>
-  <form class="gate-card" id="loginForm" novalidate>
-    <img src="/brand/icon-180.png" alt="" width="88" height="88">
-    <h1>لوحة التحكم</h1>
-    <p class="muted">أدخل كلمة السر لإدارة الموقع والموسيقى والخدمات والأعمال.</p>
-    <label class="lbl" for="loginPass">كلمة السر</label>
-    <div class="pass-wrap">
-      <input class="in" id="loginPass" type="password" autocomplete="current-password" required>
-      <button type="button" class="eye" data-eye="loginPass" aria-label="إظهار كلمة السر"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    <!-- Forced password change after first login -->
+    <main class="gate" id="force" aria-label="كلمة سر جديدة" hidden>
+      <form class="gate-card" id="forceForm" novalidate>
+        <h1>اختر كلمة سر جديدة</h1>
+        <p class="muted">هذا أول دخول. غيّر كلمة السر المؤقتة قبل المتابعة.</p>
+        <label class="lbl" for="fCur">كلمة السر المؤقتة التي دخلت بها</label>
+        <input class="in" id="fCur" type="password" autocomplete="current-password" required />
+        <label class="lbl" for="fNew">كلمة السر الجديدة (10 أحرف على الأقل)</label>
+        <input class="in" id="fNew" type="password" autocomplete="new-password" minlength="10" required />
+        <label class="lbl" for="fNew2">أعد كتابة كلمة السر الجديدة</label>
+        <input class="in" id="fNew2" type="password" autocomplete="new-password" minlength="10" required />
+        <p class="err" id="forceErr" role="alert" hidden></p>
+        <button class="btn primary wide" type="submit">حفظ والمتابعة</button>
+      </form>
+    </main>
+
+    <!-- App -->
+    <div class="app" id="app" hidden>
+      <header class="top">
+        <a class="top-brand" href="/" target="_blank" rel="noopener"
+          ><img src="/brand/icon-180.png" alt="" width="36" height="36" />
+          <h1 class="top-title">لوحة التحكم</h1></a
+        >
+        <span class="save-state" id="saveState" role="status"></span>
+        <button class="btn primary" id="saveBtn" type="button" disabled>حفظ التغييرات</button>
+      </header>
+      <nav class="tabs" id="tabs" aria-label="أقسام لوحة التحكم">
+        <button type="button" data-tab="stats" aria-current="page">الإحصائيات</button>
+        <button type="button" data-tab="music">الموسيقى</button>
+        <button type="button" data-tab="services">الخدمات</button>
+        <button type="button" data-tab="works">الأعمال</button>
+        <button type="button" data-tab="about">السيرة الذاتية</button>
+        <button type="button" data-tab="contact">التواصل والمنصات</button>
+        <button type="button" data-tab="texts">النصوص وSEO</button>
+        <button type="button" data-tab="legal">Impressum</button>
+        <button type="button" data-tab="security">الأمان</button>
+      </nav>
+      <main class="main" id="main" aria-label="المحتوى"></main>
     </div>
-    <p class="err" id="loginErr" role="alert" hidden></p>
-    <button class="btn primary wide" type="submit">دخول</button>
-    <a class="muted small" href="/">الرجوع إلى الموقع</a>
-  </form>
-</main>
 
-<!-- Forced password change after first login -->
-<main class="gate" id="force" aria-label="كلمة سر جديدة" hidden>
-  <form class="gate-card" id="forceForm" novalidate>
-    <h1>اختر كلمة سر جديدة</h1>
-    <p class="muted">هذا أول دخول. غيّر كلمة السر المؤقتة قبل المتابعة.</p>
-    <label class="lbl" for="fCur">كلمة السر المؤقتة التي دخلت بها</label>
-    <input class="in" id="fCur" type="password" autocomplete="current-password" required>
-    <label class="lbl" for="fNew">كلمة السر الجديدة (10 أحرف على الأقل)</label>
-    <input class="in" id="fNew" type="password" autocomplete="new-password" minlength="10" required>
-    <label class="lbl" for="fNew2">أعد كتابة كلمة السر الجديدة</label>
-    <input class="in" id="fNew2" type="password" autocomplete="new-password" minlength="10" required>
-    <p class="err" id="forceErr" role="alert" hidden></p>
-    <button class="btn primary wide" type="submit">حفظ والمتابعة</button>
-  </form>
-</main>
-
-<!-- App -->
-<div class="app" id="app" hidden>
-  <header class="top">
-    <a class="top-brand" href="/" target="_blank" rel="noopener"><img src="/brand/icon-180.png" alt="" width="36" height="36"><h1 class="top-title">لوحة التحكم</h1></a>
-    <span class="save-state" id="saveState" role="status"></span>
-    <button class="btn primary" id="saveBtn" type="button" disabled>حفظ التغييرات</button>
-  </header>
-  <nav class="tabs" id="tabs" aria-label="أقسام لوحة التحكم">
-    <button type="button" data-tab="stats" aria-current="page">الإحصائيات</button>
-    <button type="button" data-tab="music">الموسيقى</button>
-    <button type="button" data-tab="services">الخدمات</button>
-    <button type="button" data-tab="works">الأعمال</button>
-    <button type="button" data-tab="about">السيرة الذاتية</button>
-    <button type="button" data-tab="contact">التواصل والمنصات</button>
-    <button type="button" data-tab="texts">النصوص وSEO</button>
-    <button type="button" data-tab="legal">Impressum</button>
-    <button type="button" data-tab="security">الأمان</button>
-  </nav>
-  <main class="main" id="main" aria-label="المحتوى"></main>
-</div>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-</body>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  </body>
 </html>

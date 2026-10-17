@@ -1,25 +1,25 @@
 {
   "name": "Nour Eddin Production",
-  "nameAr": "نور الدين للإنتاج",
+  "nameAr": "نور الدين للإنتاج الإعلامي والفني",
   "tagline": {
-    "ar": "استوديو إنتاج إعلامي في فيينا",
-    "de": "Studio für Medienproduktion in Wien",
-    "en": "Media Production Studio in Vienna"
+    "ar": "استوديو إنتاج إعلامي وفني في فيينا",
+    "de": "Medien- und Kreativproduktion in Wien",
+    "en": "Media & Creative Production in Vienna"
   },
   "heroSub": {
-    "ar": "كل ما يقدّمه المايك والكاميرا: أفراح ومناسبات، بودكاست، تغطيات إعلامية، لقاءات صحفية، وأفلام وإعلانات للشركات والمحلات.",
-    "de": "Alles, was Mikrofon und Kamera können: Hochzeiten und Feiern, Podcasts, Medienberichte, Interviews sowie Filme und Werbung für Unternehmen und Geschäfte.",
-    "en": "Everything a microphone and a camera can do: weddings and celebrations, podcasts, media coverage, interviews, and films and ads for companies and shops."
+    "ar": "كل ما يقدّمه المايك والكاميرا وأكثر: أفراح ومناسبات، بودكاست، تغطيات ولقاءات صحفية، أفلام وإعلانات، تصوير شخصي، تصميم مواقع، طباعة وليزر.",
+    "de": "Alles, was Mikrofon und Kamera können – und mehr: Hochzeiten und Feiern, Podcasts, Medienberichte und Interviews, Filme und Werbung, Porträts, Webdesign, Druck und Lasergravur.",
+    "en": "Everything a microphone and a camera can do – and more: weddings and celebrations, podcasts, coverage and interviews, films and ads, portraits, web design, printing and laser engraving."
   },
   "seoDesc": {
-    "ar": "نور الدين للإنتاج في فيينا: تصوير الأفراح والمناسبات، إنتاج البودكاست، التغطية الإعلامية، اللقاءات الصحفية، أفلام الشركات والإعلانات.",
-    "de": "Nour Eddin Production in Wien: Hochzeitsvideos, Podcast-Produktion, Eventberichte, Interviews, Imagefilme und Werbevideos für Unternehmen.",
-    "en": "Nour Eddin Production in Vienna: wedding films, podcast production, event coverage, interviews, corporate films and commercials."
+    "ar": "نور الدين للإنتاج الإعلامي والفني في فيينا: تصوير أفراح، بودكاست، تغطية إعلامية، إعلانات أونلاين، تصميم مواقع، طباعة وليزر.",
+    "de": "Nour Eddin Production in Wien: Hochzeitsvideos, Podcasts, Eventberichte, Werbevideos, Online-Werbung, Webdesign, Druck und Lasergravur.",
+    "en": "Nour Eddin Production in Vienna: wedding films, podcasts, event coverage, commercials, online ads, web design, printing and laser engraving."
   },
   "keywords": {
-    "ar": "تصوير أفراح فيينا, مصور عربي فيينا, تصوير حفلات زفاف النمسا, استوديو بودكاست فيينا, تغطية إعلامية فيينا, تصوير فيديو إعلاني, أفلام شركات, مونتاج فيديو, نور الدين للإنتاج",
-    "de": "Hochzeitsvideograf Wien, Hochzeitsfilm Wien, Videoproduktion Wien, Podcast Studio Wien, Eventvideo Wien, Imagefilm Wien, Werbevideo Wien, Interview Videoproduktion, arabische Hochzeit Wien",
-    "en": "wedding videographer Vienna, video production Vienna, podcast studio Vienna, event coverage Vienna, corporate film Vienna, commercial video Vienna, Arabic wedding videographer Austria"
+    "ar": "تصوير أفراح فيينا, مصور عربي فيينا, تصوير حفلات زفاف النمسا, استوديو بودكاست فيينا, تغطية إعلامية فيينا, تصوير فيديو إعلاني, أفلام شركات, مونتاج فيديو, نور الدين للإنتاج, إعلانات أونلاين فيينا, تصميم مواقع فيينا, طباعة كروت وفلايرات فيينا, حفر بالليزر فيينا, تصوير شخصي فيينا",
+    "de": "Hochzeitsvideograf Wien, Hochzeitsfilm Wien, Videoproduktion Wien, Podcast Studio Wien, Eventvideo Wien, Imagefilm Wien, Werbevideo Wien, Interview Videoproduktion, arabische Hochzeit Wien, Online-Werbung Wien, Webdesign Wien, Druckerei Wien, Lasergravur Wien, Porträtfotograf Wien, Bewerbungsfotos Wien",
+    "en": "wedding videographer Vienna, video production Vienna, podcast studio Vienna, event coverage Vienna, corporate film Vienna, commercial video Vienna, Arabic wedding videographer Austria, online advertising Vienna, web design Vienna, printing Vienna, laser engraving Vienna, portrait photographer Vienna"
   },
   "demoNote": {
     "ar": "نسخة تجريبية للعرض: أرقام التواصل والصور مؤقتة.",
@@ -236,7 +236,7 @@
         "en": "Commercials"
       },
       "short": {
-        "ar": "الإعلانات",
+        "ar": "فيديو إعلاني",
         "de": "Werbevideos",
         "en": "Commercials"
       },
@@ -264,6 +264,78 @@
       ]
     },
     {
+      "id": "online-ads",
+      "icon": "target",
+      "name": {
+        "ar": "الإعلانات أونلاين",
+        "de": "Online-Werbung",
+        "en": "Online Advertising"
+      },
+      "short": {
+        "ar": "إعلانات أونلاين",
+        "de": "Online-Werbung",
+        "en": "Online Ads"
+      },
+      "desc": {
+        "ar": "حملات إعلانية على جوجل وإنستغرام وفيسبوك وتيك توك تصل إلى الجمهور المناسب في فيينا والنمسا، مع تصميم الإعلان ومتابعة النتائج.",
+        "de": "Werbekampagnen auf Google, Instagram, Facebook und TikTok, die die richtige Zielgruppe in Wien und Österreich erreichen – inklusive Gestaltung und Auswertung.",
+        "en": "Ad campaigns on Google, Instagram, Facebook and TikTok that reach the right audience in Vienna and Austria – including design and reporting."
+      },
+      "points": [
+        {
+          "ar": "تصميم الإعلان بالصورة والفيديو",
+          "de": "Anzeigen mit Bild und Video",
+          "en": "Image and video ads"
+        },
+        {
+          "ar": "استهداف الجمهور حسب المنطقة والاهتمامات",
+          "de": "Zielgruppen nach Region und Interessen",
+          "en": "Targeting by region and interests"
+        },
+        {
+          "ar": "تقرير بالنتائج",
+          "de": "Bericht über die Ergebnisse",
+          "en": "Results report"
+        }
+      ]
+    },
+    {
+      "id": "web-design",
+      "icon": "web",
+      "name": {
+        "ar": "تصميم المواقع",
+        "de": "Webdesign",
+        "en": "Web Design"
+      },
+      "short": {
+        "ar": "تصميم المواقع",
+        "de": "Webdesign",
+        "en": "Web Design"
+      },
+      "desc": {
+        "ar": "مواقع عصرية وسريعة ومتعددة اللغات للشركات والمحلات والفنانين، تعمل على الجوال وتظهر في نتائج جوجل.",
+        "de": "Moderne, schnelle und mehrsprachige Websites für Unternehmen, Geschäfte und Kunstschaffende – optimiert für das Smartphone und für Google.",
+        "en": "Modern, fast, multilingual websites for companies, shops and artists – built for phones and for Google."
+      },
+      "points": [
+        {
+          "ar": "تصميم يناسب هويتكم",
+          "de": "Design passend zu Ihrer Marke",
+          "en": "Design that fits your brand"
+        },
+        {
+          "ar": "بالعربية والألمانية والإنجليزية",
+          "de": "Auf Arabisch, Deutsch und Englisch",
+          "en": "In Arabic, German and English"
+        },
+        {
+          "ar": "ربط مع واتساب ومنصات التواصل",
+          "de": "Verbindung mit WhatsApp und Social Media",
+          "en": "Connected to WhatsApp and social media"
+        }
+      ]
+    },
+    {
       "id": "photography",
       "icon": "camera",
       "name": {
@@ -277,25 +349,133 @@
         "en": "Photography"
       },
       "desc": {
-        "ar": "تصوير المنتجات والأشخاص والمناسبات بصور واضحة ومعالجة احترافية.",
-        "de": "Produkt-, Porträt- und Eventfotografie mit professioneller Bildbearbeitung.",
-        "en": "Product, portrait and event photography with professional retouching."
+        "ar": "تصوير المنتجات والمناسبات والفعاليات بصور واضحة ومعالجة احترافية.",
+        "de": "Produkt- und Eventfotografie mit professioneller Bildbearbeitung.",
+        "en": "Product and event photography with professional retouching."
       },
       "points": [
-        {
-          "ar": "صور شخصية واحترافية",
-          "de": "Porträts und Business-Fotos",
-          "en": "Portraits and business photos"
-        },
         {
           "ar": "تصوير المنتجات",
           "de": "Produktfotos",
           "en": "Product photos"
         },
         {
+          "ar": "صور الفعاليات والمناسبات",
+          "de": "Fotos von Events und Feiern",
+          "en": "Event and celebration photos"
+        },
+        {
           "ar": "معالجة الصور وتسليمها رقمياً",
           "de": "Bildbearbeitung und digitale Übergabe",
           "en": "Retouching and digital delivery"
+        }
+      ]
+    },
+    {
+      "id": "portraits",
+      "icon": "portrait",
+      "name": {
+        "ar": "التصوير الشخصي",
+        "de": "Porträtfotografie",
+        "en": "Portrait Photography"
+      },
+      "short": {
+        "ar": "التصوير الشخصي",
+        "de": "Porträts",
+        "en": "Portraits"
+      },
+      "desc": {
+        "ar": "جلسات تصوير شخصية وعائلية وللأزواج، وصور احترافية للسيرة الذاتية ووسائل التواصل، في الاستوديو أو في الخارج.",
+        "de": "Porträt-, Familien- und Paarshootings sowie Bewerbungs- und Profilfotos – im Studio oder im Freien.",
+        "en": "Personal, family and couple shoots, plus professional photos for CVs and social media – in the studio or outdoors."
+      },
+      "points": [
+        {
+          "ar": "صور للسيرة الذاتية والملفات المهنية",
+          "de": "Bewerbungs- und Profilfotos",
+          "en": "CV and profile photos"
+        },
+        {
+          "ar": "جلسات عائلية وللأزواج",
+          "de": "Familien- und Paarshootings",
+          "en": "Family and couple shoots"
+        },
+        {
+          "ar": "في الاستوديو أو في الخارج",
+          "de": "Im Studio oder im Freien",
+          "en": "In the studio or outdoors"
+        }
+      ]
+    },
+    {
+      "id": "printing",
+      "icon": "print",
+      "name": {
+        "ar": "الطباعة",
+        "de": "Druck",
+        "en": "Printing"
+      },
+      "short": {
+        "ar": "الطباعة",
+        "de": "Druck",
+        "en": "Printing"
+      },
+      "desc": {
+        "ar": "طباعة كروت العمل والفلايرات والبروشورات والملصقات واللوحات والرول أب، مع التصميم إن احتجتم.",
+        "de": "Visitenkarten, Flyer, Broschüren, Aufkleber, Plakate und Roll-ups – auf Wunsch inklusive Gestaltung.",
+        "en": "Business cards, flyers, brochures, stickers, posters and roll-ups – including design if you need it."
+      },
+      "points": [
+        {
+          "ar": "كروت عمل وفلايرات وبروشورات",
+          "de": "Visitenkarten, Flyer und Broschüren",
+          "en": "Business cards, flyers and brochures"
+        },
+        {
+          "ar": "ملصقات ولوحات ورول أب",
+          "de": "Aufkleber, Plakate und Roll-ups",
+          "en": "Stickers, posters and roll-ups"
+        },
+        {
+          "ar": "تصميم جاهز للطباعة",
+          "de": "Druckfertige Gestaltung",
+          "en": "Print-ready design"
+        }
+      ]
+    },
+    {
+      "id": "laser",
+      "icon": "laser",
+      "name": {
+        "ar": "الحفر والقص بالليزر",
+        "de": "Lasergravur & Laserschnitt",
+        "en": "Laser Engraving & Cutting"
+      },
+      "short": {
+        "ar": "الليزر",
+        "de": "Laser",
+        "en": "Laser"
+      },
+      "desc": {
+        "ar": "حفر وقص بالليزر على الخشب والأكريليك وغيرهما، للهدايا واللوحات والشعارات وقطع الديكور.",
+        "de": "Gravur und Zuschnitt per Laser auf Holz, Acryl und mehr – für Geschenke, Schilder, Logos und Dekoration.",
+        "en": "Laser engraving and cutting on wood, acrylic and more – for gifts, signs, logos and decoration."
+      },
+      "points": [
+        {
+          "ar": "هدايا بأسماء وعبارات محفورة",
+          "de": "Geschenke mit persönlicher Gravur",
+          "en": "Gifts with personal engraving"
+        },
+        {
+          "ar": "لوحات وشعارات للمحلات",
+          "de": "Schilder und Logos für Geschäfte",
+          "en": "Signs and logos for shops"
+        },
+        {
+          "ar": "قطع ديكور حسب الطلب",
+          "de": "Dekoration nach Wunsch",
+          "en": "Custom decoration"
         }
       ]
     },
@@ -348,9 +528,9 @@
       "en": "Studio & media office · Vienna"
     },
     "text": {
-      "ar": "نور الدين للإنتاج استوديو ومكتب إعلامي في فيينا، يعمل بكل ما يقدّمه المايك والكاميرا. نرافق الأفراح والمناسبات، ونسجّل البودكاست، ونغطي الفعاليات واللقاءات الصحفية، ونصنع أفلاماً وإعلانات للشركات والمؤسسات والمحلات التجارية.\nنؤمن أن كل لحظة تستحق أن تُروى بصورة جميلة وصوت نقي، لذلك نهتم بكل تفصيل: من التحضير والتصوير حتى المونتاج والتسليم.",
-      "de": "Nour Eddin Production ist ein Studio und Medienbüro in Wien – für alles, was Mikrofon und Kamera können. Wir begleiten Hochzeiten und Feiern, nehmen Podcasts auf, berichten über Veranstaltungen und Interviews und produzieren Filme und Werbung für Unternehmen, Organisationen und Geschäfte.\nWir sind überzeugt, dass jeder Moment es verdient, mit schönen Bildern und klarem Ton erzählt zu werden. Deshalb achten wir auf jedes Detail – von der Vorbereitung über den Dreh bis zum Schnitt und zur Übergabe.",
-      "en": "Nour Eddin Production is a studio and media office in Vienna – for everything a microphone and a camera can do. We accompany weddings and celebrations, record podcasts, cover events and interviews, and produce films and ads for companies, organisations and shops.\nWe believe every moment deserves to be told with beautiful images and clear sound, so we care about every detail – from preparation and filming to editing and delivery."
+      "ar": "نور الدين للإنتاج الإعلامي والفني استوديو ومكتب إعلامي في فيينا، يعمل بكل ما يقدّمه المايك والكاميرا. نرافق الأفراح والمناسبات، ونسجّل البودكاست، ونغطي الفعاليات واللقاءات الصحفية، ونصنع أفلاماً وإعلانات للشركات والمؤسسات والمحلات التجارية، ونقدّم التصوير الشخصي وتصميم المواقع والإعلانات أونلاين والطباعة والحفر بالليزر.\nنؤمن أن كل لحظة تستحق أن تُروى بصورة جميلة وصوت نقي، لذلك نهتم بكل تفصيل: من التحضير والتصوير حتى المونتاج والتسليم.",
+      "de": "Nour Eddin Production ist ein Studio und Medienbüro in Wien – für alles, was Mikrofon und Kamera können. Wir begleiten Hochzeiten und Feiern, nehmen Podcasts auf, berichten über Veranstaltungen und Interviews und produzieren Filme und Werbung für Unternehmen, Organisationen und Geschäfte. Dazu kommen Porträtfotografie, Webdesign, Online-Werbung, Druck und Lasergravur.\nWir sind überzeugt, dass jeder Moment es verdient, mit schönen Bildern und klarem Ton erzählt zu werden. Deshalb achten wir auf jedes Detail – von der Vorbereitung über den Dreh bis zum Schnitt und zur Übergabe.",
+      "en": "Nour Eddin Production is a studio and media office in Vienna – for everything a microphone and a camera can do. We accompany weddings and celebrations, record podcasts, cover events and interviews, and produce films and ads for companies, organisations and shops. We also offer portrait photography, web design, online advertising, printing and laser engraving.\nWe believe every moment deserves to be told with beautiful images and clear sound, so we care about every detail – from preparation and filming to editing and delivery."
     },
     "photo": "",
     "stats": [],
@@ -424,9 +604,7 @@
       }
     }
   ],
-  "phones": [
-    "+43 681 20875280"
-  ],
+  "phones": ["+43 681 20875280"],
   "whatsapp": "4368120875280",
   "email": "info@alaadigital.at",
   "city": {

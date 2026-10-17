@@ -15,6 +15,11 @@ SERVICE = {
  "live": '<rect x="4" y="13" width="28" height="22" rx="3.5"/><path d="M32 21l12-7v20l-12-7z"/><circle cx="11" cy="20" r="2.2" fill="currentColor" stroke="none"/><path d="M16 20h9"/>',
  "studio": '<path d="M9 7l20 6.5-4.5 13L4.5 20z"/><path d="M15 23.5L11 42M19.5 25l6.5 17M8 42h21M33 11l7-3.5M34.5 18.5h8M32.5 25.5l6.5 4"/>',
  "music": '<path d="M18 35V10l21-4v25M18 16.5l21-4"/><circle cx="13" cy="35" r="5"/><circle cx="34" cy="31" r="5"/>',
+ "web": '<rect x="5" y="7" width="38" height="29" rx="3"/><path d="M5 14h38M16 42h16M24 36v6M10 10.5h.01M14 10.5h.01M18 10.5h.01M18 20l-5 5 5 5M30 20l5 5-5 5M26.5 18.5l-5 13"/>',
+ "print": '<path d="M13 18V6h22v12"/><rect x="5" y="18" width="38" height="16" rx="3"/><path d="M13 28h22v14H13zM18 33h12M18 37.5h8"/><circle cx="37" cy="23" r="1.4" fill="currentColor" stroke="none"/>',
+ "laser": '<rect x="13" y="4" width="22" height="11" rx="2.5"/><path d="M19 9h10M20 15l4 5 4-5M24 22v3M24 28v3M24 34l-6 1.5M24 34l6 1.5M24 34l-4.5-3.5M24 34l4.5-3.5M5 38h38v5H5z"/>',
+ "target": '<circle cx="22" cy="26" r="16"/><circle cx="22" cy="26" r="9.5"/><circle cx="22" cy="26" r="3.2"/><path d="M22 26L40 8M34 8h6v6"/>',
+ "portrait": '<rect x="7" y="4" width="34" height="40" rx="3"/><circle cx="24" cy="18" r="6.5"/><path d="M12.5 38c1.5-7 6.3-10.5 11.5-10.5S34 31 35.5 38"/>',
  "star": '<path d="M24 4l6 20-6 20-6-20z"/><path d="M4 24l20-6 20 6-20 6z"/>',
 }
 # Social icons: 24x24, filled
