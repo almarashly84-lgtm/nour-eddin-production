@@ -1,0 +1,460 @@
+{
+  "name": "Nour Eddin Production",
+  "nameAr": "نور الدين للإنتاج",
+  "tagline": {
+    "ar": "استوديو إنتاج إعلامي في فيينا",
+    "de": "Studio für Medienproduktion in Wien",
+    "en": "Media Production Studio in Vienna"
+  },
+  "heroSub": {
+    "ar": "كل ما يقدّمه المايك والكاميرا: أفراح ومناسبات، بودكاست، تغطيات إعلامية، لقاءات صحفية، وأفلام وإعلانات للشركات والمحلات.",
+    "de": "Alles, was Mikrofon und Kamera können: Hochzeiten und Feiern, Podcasts, Medienberichte, Interviews sowie Filme und Werbung für Unternehmen und Geschäfte.",
+    "en": "Everything a microphone and a camera can do: weddings and celebrations, podcasts, media coverage, interviews, and films and ads for companies and shops."
+  },
+  "seoDesc": {
+    "ar": "نور الدين للإنتاج في فيينا: تصوير الأفراح والمناسبات، إنتاج البودكاست، التغطية الإعلامية، اللقاءات الصحفية، أفلام الشركات والإعلانات.",
+    "de": "Nour Eddin Production in Wien: Hochzeitsvideos, Podcast-Produktion, Eventberichte, Interviews, Imagefilme und Werbevideos für Unternehmen.",
+    "en": "Nour Eddin Production in Vienna: wedding films, podcast production, event coverage, interviews, corporate films and commercials."
+  },
+  "keywords": {
+    "ar": "تصوير أفراح فيينا, مصور عربي فيينا, تصوير حفلات زفاف النمسا, استوديو بودكاست فيينا, تغطية إعلامية فيينا, تصوير فيديو إعلاني, أفلام شركات, مونتاج فيديو, نور الدين للإنتاج",
+    "de": "Hochzeitsvideograf Wien, Hochzeitsfilm Wien, Videoproduktion Wien, Podcast Studio Wien, Eventvideo Wien, Imagefilm Wien, Werbevideo Wien, Interview Videoproduktion, arabische Hochzeit Wien",
+    "en": "wedding videographer Vienna, video production Vienna, podcast studio Vienna, event coverage Vienna, corporate film Vienna, commercial video Vienna, Arabic wedding videographer Austria"
+  },
+  "demoNote": {
+    "ar": "نسخة تجريبية للعرض: أرقام التواصل والصور مؤقتة.",
+    "de": "Demo-Version: Kontaktdaten und Bilder sind vorläufig.",
+    "en": "Demo version: contact details and images are placeholders."
+  },
+  "intro": {
+    "enabled": true,
+    "text": {
+      "ar": "كل لحظة تستحق أن تُروى",
+      "de": "Jeder Moment verdient seine Geschichte",
+      "en": "Every moment deserves its story"
+    }
+  },
+  "music": {
+    "enabled": true,
+    "volume": 0.35,
+    "tracks": [
+      {
+        "id": "ambient",
+        "title": "Nour Ambient (Demo)",
+        "src": "audio/ambient.mp3"
+      }
+    ],
+    "active": "ambient"
+  },
+  "services": [
+    {
+      "id": "weddings",
+      "icon": "rings",
+      "name": {
+        "ar": "الأفراح والمناسبات",
+        "de": "Hochzeiten & Feiern",
+        "en": "Weddings & Celebrations"
+      },
+      "short": {
+        "ar": "الأفراح",
+        "de": "Hochzeiten",
+        "en": "Weddings"
+      },
+      "desc": {
+        "ar": "نوثّق يومكم الأجمل بالصورة والصوت: من التحضيرات وزفّة العروسين حتى آخر رقصة، في فيلم بطابع سينمائي ومقاطع قصيرة جاهزة للمشاركة.",
+        "de": "Wir halten Ihren schönsten Tag in Bild und Ton fest – von den Vorbereitungen über den Einzug des Brautpaares bis zum letzten Tanz, als Film im Kinostil und in kurzen Clips zum Teilen.",
+        "en": "We capture your most beautiful day in picture and sound – from the preparations and the couple's entrance to the last dance – as a cinematic film and short clips ready to share."
+      },
+      "points": [
+        {
+          "ar": "فيلم كامل للحفل بطابع سينمائي",
+          "de": "Hochzeitsfilm im Kinostil",
+          "en": "Full cinematic wedding film"
+        },
+        {
+          "ar": "مقاطع قصيرة لوسائل التواصل",
+          "de": "Kurze Clips für Social Media",
+          "en": "Short clips for social media"
+        },
+        {
+          "ar": "صور للعروسين والعائلة والضيوف",
+          "de": "Fotos von Brautpaar, Familie und Gästen",
+          "en": "Photos of the couple, family and guests"
+        }
+      ]
+    },
+    {
+      "id": "podcast",
+      "icon": "mic",
+      "name": {
+        "ar": "إنتاج البودكاست",
+        "de": "Podcast-Produktion",
+        "en": "Podcast Production"
+      },
+      "short": {
+        "ar": "البودكاست",
+        "de": "Podcast",
+        "en": "Podcasts"
+      },
+      "desc": {
+        "ar": "استوديو بالميكروفونات والكاميرات والإضاءة لتسجيل حلقاتكم بالصوت والصورة، مع المونتاج وتجهيز الحلقة للنشر على قنواتكم.",
+        "de": "Ein Studio mit Mikrofonen, Kameras und Licht für Ihre Folgen in Bild und Ton – inklusive Schnitt und Vorbereitung für Ihre Kanäle.",
+        "en": "A studio with microphones, cameras and lighting to record your episodes in sound and video – including editing and preparation for your channels."
+      },
+      "points": [
+        {
+          "ar": "تسجيل بالصوت والصورة",
+          "de": "Aufnahme in Bild und Ton",
+          "en": "Audio and video recording"
+        },
+        {
+          "ar": "مونتاج الحلقة وتجهيزها للنشر",
+          "de": "Schnitt und Veröffentlichungsvorbereitung",
+          "en": "Editing and publishing preparation"
+        },
+        {
+          "ar": "مقاطع ترويجية قصيرة من كل حلقة",
+          "de": "Kurze Promo-Clips aus jeder Folge",
+          "en": "Short promo clips from every episode"
+        }
+      ]
+    },
+    {
+      "id": "coverage",
+      "icon": "broadcast",
+      "name": {
+        "ar": "التغطية الإعلامية",
+        "de": "Medienberichterstattung",
+        "en": "Media Coverage"
+      },
+      "short": {
+        "ar": "التغطية الإعلامية",
+        "de": "Medienberichte",
+        "en": "Coverage"
+      },
+      "desc": {
+        "ar": "تغطية احترافية للمؤتمرات والفعاليات والمعارض والمناسبات الرسمية، بتقارير مصوّرة ومقاطع قصيرة للنشر.",
+        "de": "Professionelle Berichterstattung über Konferenzen, Veranstaltungen, Messen und offizielle Anlässe – mit Videoberichten und kurzen Clips zur Veröffentlichung.",
+        "en": "Professional coverage of conferences, events, fairs and official occasions – with video reports and short clips ready to publish."
+      },
+      "points": [
+        {
+          "ar": "تقرير مصوّر عن الفعالية",
+          "de": "Videobericht über die Veranstaltung",
+          "en": "Video report of the event"
+        },
+        {
+          "ar": "مقابلات مع الضيوف والمنظّمين",
+          "de": "Interviews mit Gästen und Veranstaltern",
+          "en": "Interviews with guests and organisers"
+        },
+        {
+          "ar": "صور ومقاطع لوسائل التواصل",
+          "de": "Fotos und Clips für Social Media",
+          "en": "Photos and clips for social media"
+        }
+      ]
+    },
+    {
+      "id": "interviews",
+      "icon": "interview",
+      "name": {
+        "ar": "اللقاءات الصحفية",
+        "de": "Interviews & Pressegespräche",
+        "en": "Press Interviews"
+      },
+      "short": {
+        "ar": "اللقاءات الصحفية",
+        "de": "Interviews",
+        "en": "Interviews"
+      },
+      "desc": {
+        "ar": "تصوير المقابلات واللقاءات الصحفية بإضاءة مدروسة وصوت نقي، في الاستوديو أو في موقعكم.",
+        "de": "Interviews und Pressegespräche mit durchdachtem Licht und klarem Ton – im Studio oder bei Ihnen vor Ort.",
+        "en": "Interviews and press conversations with considered lighting and clear sound – in the studio or at your location."
+      },
+      "points": [
+        {
+          "ar": "في الاستوديو أو في موقعكم",
+          "de": "Im Studio oder vor Ort",
+          "en": "In the studio or on location"
+        },
+        {
+          "ar": "ميكروفونات لكل متحدّث",
+          "de": "Mikrofone für alle Gesprächspartner",
+          "en": "Microphones for every speaker"
+        },
+        {
+          "ar": "مونتاج وترجمة مكتوبة عند الطلب",
+          "de": "Schnitt und Untertitel auf Wunsch",
+          "en": "Editing and subtitles on request"
+        }
+      ]
+    },
+    {
+      "id": "corporate",
+      "icon": "corporate",
+      "name": {
+        "ar": "أفلام الشركات والمؤسسات",
+        "de": "Unternehmensfilme",
+        "en": "Corporate Films"
+      },
+      "short": {
+        "ar": "أفلام الشركات",
+        "de": "Imagefilme",
+        "en": "Corporate"
+      },
+      "desc": {
+        "ar": "أفلام تعريفية تروي قصة شركتكم أو مؤسستكم: فريق العمل، المكان، والخدمات، بأسلوب يبني الثقة مع عملائكم.",
+        "de": "Imagefilme, die die Geschichte Ihres Unternehmens oder Ihrer Organisation erzählen – Team, Räume und Leistungen, in einem Stil, der Vertrauen schafft.",
+        "en": "Image films that tell the story of your company or organisation – team, premises and services, in a style that builds trust with your clients."
+      },
+      "points": [
+        {
+          "ar": "فيلم تعريفي بالشركة",
+          "de": "Imagefilm für Ihr Unternehmen",
+          "en": "Company image film"
+        },
+        {
+          "ar": "فيديوهات للموظفين والفعاليات الداخلية",
+          "de": "Videos für Mitarbeiter und interne Events",
+          "en": "Videos for staff and internal events"
+        },
+        {
+          "ar": "نسخ بعدة لغات عند الطلب",
+          "de": "Mehrsprachige Fassungen auf Wunsch",
+          "en": "Multilingual versions on request"
+        }
+      ]
+    },
+    {
+      "id": "commercials",
+      "icon": "megaphone",
+      "name": {
+        "ar": "الإعلانات التجارية",
+        "de": "Werbevideos",
+        "en": "Commercials"
+      },
+      "short": {
+        "ar": "الإعلانات",
+        "de": "Werbevideos",
+        "en": "Commercials"
+      },
+      "desc": {
+        "ar": "فيديوهات إعلانية قصيرة للمحلات التجارية والمطاعم والعلامات التجارية، مصمَّمة لإنستغرام وتيك توك ويوتيوب وفيسبوك.",
+        "de": "Kurze Werbevideos für Geschäfte, Restaurants und Marken – gemacht für Instagram, TikTok, YouTube und Facebook.",
+        "en": "Short promotional videos for shops, restaurants and brands – made for Instagram, TikTok, YouTube and Facebook."
+      },
+      "points": [
+        {
+          "ar": "فكرة وسيناريو للإعلان",
+          "de": "Idee und Drehbuch",
+          "en": "Concept and script"
+        },
+        {
+          "ar": "تصوير المنتجات والمكان",
+          "de": "Aufnahmen von Produkten und Räumen",
+          "en": "Product and location shots"
+        },
+        {
+          "ar": "مقاسات جاهزة لكل منصة",
+          "de": "Passende Formate für jede Plattform",
+          "en": "Ready formats for every platform"
+        }
+      ]
+    },
+    {
+      "id": "photography",
+      "icon": "camera",
+      "name": {
+        "ar": "التصوير الفوتوغرافي",
+        "de": "Fotografie",
+        "en": "Photography"
+      },
+      "short": {
+        "ar": "التصوير",
+        "de": "Fotografie",
+        "en": "Photography"
+      },
+      "desc": {
+        "ar": "تصوير المنتجات والأشخاص والمناسبات بصور واضحة ومعالجة احترافية.",
+        "de": "Produkt-, Porträt- und Eventfotografie mit professioneller Bildbearbeitung.",
+        "en": "Product, portrait and event photography with professional retouching."
+      },
+      "points": [
+        {
+          "ar": "صور شخصية واحترافية",
+          "de": "Porträts und Business-Fotos",
+          "en": "Portraits and business photos"
+        },
+        {
+          "ar": "تصوير المنتجات",
+          "de": "Produktfotos",
+          "en": "Product photos"
+        },
+        {
+          "ar": "معالجة الصور وتسليمها رقمياً",
+          "de": "Bildbearbeitung und digitale Übergabe",
+          "en": "Retouching and digital delivery"
+        }
+      ]
+    },
+    {
+      "id": "editing",
+      "icon": "edit",
+      "name": {
+        "ar": "المونتاج والإخراج",
+        "de": "Schnitt & Postproduktion",
+        "en": "Editing & Post-Production"
+      },
+      "short": {
+        "ar": "المونتاج",
+        "de": "Schnitt",
+        "en": "Editing"
+      },
+      "desc": {
+        "ar": "مونتاج وتصحيح ألوان وموسيقى وترجمة مكتوبة، لموادكم الجاهزة أو لما نصوّره لكم.",
+        "de": "Schnitt, Farbkorrektur, Musik und Untertitel – für Ihr eigenes Material oder für unsere Aufnahmen.",
+        "en": "Editing, colour grading, music and subtitles – for your own footage or for what we film for you."
+      },
+      "points": [
+        {
+          "ar": "مونتاج وتصحيح ألوان",
+          "de": "Schnitt und Farbkorrektur",
+          "en": "Editing and colour grading"
+        },
+        {
+          "ar": "ترجمة مكتوبة بالعربية والألمانية والإنجليزية",
+          "de": "Untertitel auf Arabisch, Deutsch und Englisch",
+          "en": "Subtitles in Arabic, German and English"
+        },
+        {
+          "ar": "تجهيز الفيديو لكل منصة",
+          "de": "Aufbereitung für jede Plattform",
+          "en": "Delivery for every platform"
+        }
+      ]
+    }
+  ],
+  "about": {
+    "title": {
+      "ar": "من نحن",
+      "de": "Über uns",
+      "en": "About us"
+    },
+    "role": {
+      "ar": "استوديو ومكتب إعلامي · فيينا",
+      "de": "Studio & Medienbüro · Wien",
+      "en": "Studio & media office · Vienna"
+    },
+    "text": {
+      "ar": "نور الدين للإنتاج استوديو ومكتب إعلامي في فيينا، يعمل بكل ما يقدّمه المايك والكاميرا. نرافق الأفراح والمناسبات، ونسجّل البودكاست، ونغطي الفعاليات واللقاءات الصحفية، ونصنع أفلاماً وإعلانات للشركات والمؤسسات والمحلات التجارية.\nنؤمن أن كل لحظة تستحق أن تُروى بصورة جميلة وصوت نقي، لذلك نهتم بكل تفصيل: من التحضير والتصوير حتى المونتاج والتسليم.",
+      "de": "Nour Eddin Production ist ein Studio und Medienbüro in Wien – für alles, was Mikrofon und Kamera können. Wir begleiten Hochzeiten und Feiern, nehmen Podcasts auf, berichten über Veranstaltungen und Interviews und produzieren Filme und Werbung für Unternehmen, Organisationen und Geschäfte.\nWir sind überzeugt, dass jeder Moment es verdient, mit schönen Bildern und klarem Ton erzählt zu werden. Deshalb achten wir auf jedes Detail – von der Vorbereitung über den Dreh bis zum Schnitt und zur Übergabe.",
+      "en": "Nour Eddin Production is a studio and media office in Vienna – for everything a microphone and a camera can do. We accompany weddings and celebrations, record podcasts, cover events and interviews, and produce films and ads for companies, organisations and shops.\nWe believe every moment deserves to be told with beautiful images and clear sound, so we care about every detail – from preparation and filming to editing and delivery."
+    },
+    "photo": "",
+    "stats": [],
+    "links": []
+  },
+  "works": [
+    {
+      "id": "sample-wedding",
+      "type": "image",
+      "cat": "weddings",
+      "img": "art/wedding.svg",
+      "title": {
+        "ar": "نموذج: حفل زفاف",
+        "de": "Beispiel: Hochzeit",
+        "en": "Sample: Wedding"
+      }
+    },
+    {
+      "id": "sample-podcast",
+      "type": "image",
+      "cat": "podcast",
+      "img": "art/podcast.svg",
+      "title": {
+        "ar": "نموذج: حلقة بودكاست",
+        "de": "Beispiel: Podcast-Folge",
+        "en": "Sample: Podcast episode"
+      }
+    },
+    {
+      "id": "sample-coverage",
+      "type": "image",
+      "cat": "coverage",
+      "img": "art/coverage.svg",
+      "title": {
+        "ar": "نموذج: تغطية فعالية",
+        "de": "Beispiel: Eventbericht",
+        "en": "Sample: Event coverage"
+      }
+    },
+    {
+      "id": "sample-interview",
+      "type": "image",
+      "cat": "interviews",
+      "img": "art/interview.svg",
+      "title": {
+        "ar": "نموذج: لقاء صحفي",
+        "de": "Beispiel: Interview",
+        "en": "Sample: Interview"
+      }
+    },
+    {
+      "id": "sample-corporate",
+      "type": "image",
+      "cat": "corporate",
+      "img": "art/corporate.svg",
+      "title": {
+        "ar": "نموذج: فيلم شركة",
+        "de": "Beispiel: Imagefilm",
+        "en": "Sample: Corporate film"
+      }
+    },
+    {
+      "id": "sample-commercial",
+      "type": "image",
+      "cat": "commercials",
+      "img": "art/commercial.svg",
+      "title": {
+        "ar": "نموذج: إعلان لمحل تجاري",
+        "de": "Beispiel: Werbevideo",
+        "en": "Sample: Commercial"
+      }
+    }
+  ],
+  "phones": [
+    "+43 681 20875280"
+  ],
+  "whatsapp": "4368120875280",
+  "email": "info@alaadigital.at",
+  "city": {
+    "ar": "فيينا، النمسا",
+    "de": "Wien, Österreich",
+    "en": "Vienna, Austria"
+  },
+  "social": {
+    "youtube": "",
+    "facebook": "",
+    "instagram": "https://www.instagram.com/nour_show_official/",
+    "tiktok": ""
+  },
+  "defaultLang": "de",
+  "messageLang": "ar",
+  "legal": {
+    "company": "Nour Eddin Production",
+    "owner": "",
+    "legalForm": "",
+    "address": "",
+    "phone": "",
+    "email": "",
+    "uid": "",
+    "registerNo": "",
+    "registerCourt": "",
+    "gisa": "",
+    "chamber": "",
+    "authority": "",
+    "trade": ""
+  }
+}
