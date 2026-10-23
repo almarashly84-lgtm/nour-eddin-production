@@ -33,9 +33,9 @@ const LANGS = ["ar", "de", "en"];
 /* Upload limits. Cloudflare accepts request bodies up to 100 MB on the Free plan; files are streamed, never held in memory. */
 const LIMITS = { image: 6 * 1024 * 1024, audio: 25 * 1024 * 1024, video: 95 * 1024 * 1024 };
 const MEDIA_RE = /^[a-z0-9-]+\.(webp|jpg|png|mp3|m4a|mp4|webm)$/;
-/* Protection against floods: at most this many statistics events are stored per day (each costs 2 database writes),
+/* Protection against floods: at most this many statistics events are stored per day (each costs about 4 row writes),
    so nobody can use up the free daily D1 write allowance, which is shared by every site in the Cloudflare account. */
-const DAILY_EVENT_CAP = 10000;
+const DAILY_EVENT_CAP = 5000;
 const SITE_TTL = 15 * 1000; // public pages reuse the site data for 15 s instead of reading the database on every visit
 const BACKUP_KEY = "https://nour-eddin.internal/__site-backup"; // last good copy in the Cloudflare cache, used if D1 is unavailable
 
