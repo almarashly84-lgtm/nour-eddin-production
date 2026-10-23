@@ -62,11 +62,15 @@
     weak_password: "كلمة السر الجديدة قصيرة (10 أحرف على الأقل).",
     same_password: "اختر كلمة سر مختلفة عن الحالية.",
     not_configured: "لم تُضبط كلمة السر المؤقتة بعد في Cloudflare (ADMIN_INITIAL_PASSWORD).",
-    storage_missing: "التخزين R2 غير مربوط في Cloudflare."
+    storage_missing: "التخزين R2 غير مربوط في Cloudflare.",
+    locked: "محاولات كثيرة. انتظر دقيقة ثم حاول مجددًا.",
+    conflict: "تم حفظ تغييرات من جهاز آخر.",
+    server_error: "تعذّر الاتصال بالخادم. تحقّق من الإنترنت وحاول مرة أخرى."
   };
 
   let site = null,
     saved = "",
+    siteVersion = null, // when the site was last saved on the server (to notice edits from another device)
     tab = "stats";
 
   /* ------------------------------------------------------------ helpers */
@@ -90,6 +94,7 @@
     } catch {
       /* empty */
     }
+    if (path === "site" && r.ok && r.headers.get("X-Site-Updated") != null) siteVersion = r.headers.get("X-Site-Updated");
     if (r.status === 401 && path !== "login" && path !== "password") {
       showGate();
       throw new Error("unauthorized");
@@ -391,13 +396,17 @@
         $("#force").hidden = false;
         return;
       }
-      site = await api("site");
-      saved = JSON.stringify(site);
+      // After the session expired mid-edit: keep the unsaved changes instead of replacing them with the server copy
+      const draft = site && JSON.stringify(site) !== saved ? site : null;
+      const fresh = await api("site");
+      saved = JSON.stringify(fresh);
+      site = draft || fresh;
       $("#gate").hidden = true;
       $("#force").hidden = true;
       $("#app").hidden = false;
       render();
       markDirty();
+      if (draft) toast("تم الاحتفاظ بتعديلاتك غير المحفوظة. اضغط «حفظ» لنشرها.");
     } catch (e) {
       if (e.message !== "unauthorized") showGate();
     }
@@ -450,8 +459,27 @@
     const btn = $("#saveBtn");
     btn.disabled = true;
     $("#saveState").textContent = "جارٍ الحفظ…";
+    const put = (force) =>
+      api("site", {
+        method: "PUT",
+        body: JSON.stringify(site),
+        headers: { ...(siteVersion != null ? { "X-Base-Updated": siteVersion } : {}), ...(force ? { "X-Force": "1" } : {}) }
+      });
     try {
-      const d = await api("site", { method: "PUT", body: JSON.stringify(site) });
+      let d;
+      try {
+        d = await put(false);
+      } catch (e) {
+        if (e.message !== "conflict") throw e;
+        if (
+          !confirm(
+            "تم حفظ تغييرات على الموقع من جهاز آخر بعد أن فتحتَ لوحة التحكم هنا.\n\nموافق = استبدالها بتعديلاتك الحالية.\nإلغاء = لا تحفظ الآن (حدّث الصفحة لترى النسخة الأحدث)."
+          )
+        )
+          throw e;
+        d = await put(true);
+      }
+      if (d.updated != null) siteVersion = String(d.updated);
       site = d.site;
       saved = JSON.stringify(site);
       markDirty();
@@ -1217,6 +1245,60 @@
             }
           }
         })
+      ),
+      card(
+        "نسخة احتياطية",
+        "نزّل نسخة من كل نصوص الموقع وإعداداته واحفظها عندك (مرة كل شهر مثلًا). الصور والفيديوهات نفسها لا تدخل في الملف، تبقى محفوظة في Cloudflare.",
+        h(
+          "div",
+          { class: "btn-row" },
+          h("button", {
+            type: "button",
+            class: "btn",
+            text: "تنزيل نسخة احتياطية",
+            onclick: () => {
+              const blob = new Blob([JSON.stringify(site, null, 2)], { type: "application/json" });
+              const a = h("a", {
+                href: URL.createObjectURL(blob),
+                download: `nour-eddin-backup-${new Date().toISOString().slice(0, 10)}.json`
+              });
+              document.body.append(a);
+              a.click();
+              setTimeout(() => {
+                URL.revokeObjectURL(a.href);
+                a.remove();
+              }, 1000);
+            }
+          }),
+          h("button", {
+            type: "button",
+            class: "btn",
+            text: "استعادة من نسخة",
+            onclick: (e) => e.currentTarget.nextElementSibling.click()
+          }),
+          h("input", {
+            type: "file",
+            accept: "application/json,.json",
+            hidden: true,
+            "aria-label": "ملف النسخة الاحتياطية",
+            onchange: async (e) => {
+              const f = e.target.files[0];
+              e.target.value = "";
+              if (!f) return;
+              try {
+                if (f.size > 512 * 1024) throw new Error("big");
+                const data = JSON.parse(await f.text());
+                if (!data || !Array.isArray(data.services) || !data.music) throw new Error("bad");
+                site = data;
+                render();
+                markDirty();
+                toast("تم تحميل النسخة. راجعها ثم اضغط «حفظ» لنشرها على الموقع.");
+              } catch {
+                toast("هذا الملف ليس نسخة احتياطية صالحة لهذا الموقع.", true);
+              }
+            }
+          })
+        )
       ),
       card(
         "تسجيل الخروج",

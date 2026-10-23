@@ -20,7 +20,13 @@
     { "binding": "MEDIA", "bucket_name": "nour-media" }
   ],
   "vars": {
-    "SHOP_TIMEZONE": "Europe/Vienna"
-  }
+    "SHOP_TIMEZONE": "Europe/Vienna",
+    "SITE_ORIGIN": "https://nour-eddin.com"
+  },
+  // Flood protection per visitor (Cloudflare Workers Rate Limiting): statistics 40 per minute, admin login 8 per minute
+  "ratelimits": [
+    { "name": "TRACK_LIMIT", "namespace_id": "41601", "simple": { "limit": 40, "period": 60 } },
+    { "name": "LOGIN_LIMIT", "namespace_id": "41602", "simple": { "limit": 8, "period": 60 } }
+  ]
   // Secrets (not here): ADMIN_INITIAL_PASSWORD and IP_SALT — set them in Cloudflare → Settings → Variables and Secrets
 }

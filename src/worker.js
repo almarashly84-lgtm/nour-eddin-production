@@ -13,8 +13,14 @@ CREATE TABLE IF NOT EXISTS sessions (token_hash TEXT PRIMARY KEY, expires_at INT
 CREATE TABLE IF NOT EXISTS login_attempts (ip TEXT NOT NULL, ts INTEGER NOT NULL);
 CREATE INDEX IF NOT EXISTS idx_login_ip ON login_attempts (ip, ts);
 CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, type TEXT NOT NULL, day TEXT NOT NULL, ts INTEGER NOT NULL, lang TEXT, ref TEXT);
-CREATE INDEX IF NOT EXISTS idx_events_day ON events (day, type);
+CREATE TABLE IF NOT EXISTS counts (day TEXT NOT NULL, type TEXT NOT NULL, ref TEXT NOT NULL DEFAULT '', lang TEXT NOT NULL DEFAULT '', n INTEGER NOT NULL, PRIMARY KEY (day, type, ref, lang));
 `;
+/* One-time move of the old raw visit rows into the daily counters (keeps the existing statistics). */
+const MIGRATE_COUNTS = [
+  "INSERT INTO counts (day, type, ref, lang, n) SELECT day, type, COALESCE(ref, ''), COALESCE(lang, ''), COUNT(*) FROM events GROUP BY day, type, COALESCE(ref, ''), COALESCE(lang, '') ON CONFLICT(day, type, ref, lang) DO UPDATE SET n = n + excluded.n",
+  "DELETE FROM events",
+  "INSERT OR IGNORE INTO settings (key, value, updated_at) VALUES ('migrated_counts', '1', strftime('%s','now') * 1000)"
+];
 
 const PBKDF2_ITER = 100000; // Workers' WebCrypto maximum
 const SESSION_DAYS = 7;
@@ -27,62 +33,110 @@ const LANGS = ["ar", "de", "en"];
 /* Upload limits. Cloudflare accepts request bodies up to 100 MB on the Free plan; files are streamed, never held in memory. */
 const LIMITS = { image: 6 * 1024 * 1024, audio: 25 * 1024 * 1024, video: 95 * 1024 * 1024 };
 const MEDIA_RE = /^[a-z0-9-]+\.(webp|jpg|png|mp3|m4a|mp4|webm)$/;
+/* Protection against floods: at most this many statistics events are stored per day (each costs 2 database writes),
+   so nobody can use up the free daily D1 write allowance, which is shared by every site in the Cloudflare account. */
+const DAILY_EVENT_CAP = 10000;
+const SITE_TTL = 15 * 1000; // public pages reuse the site data for 15 s instead of reading the database on every visit
+const BACKUP_KEY = "https://nour-eddin.internal/__site-backup"; // last good copy in the Cloudflare cache, used if D1 is unavailable
 
 let schemaReady = false;
+let siteMem = null,
+  siteMemAt = 0,
+  siteMemJson = "";
+
+async function ensureSchema(env) {
+  if (schemaReady) return;
+  await env.DB.exec(SCHEMA.replace(/\n/g, " "));
+  const done = await env.DB.prepare("SELECT 1 AS ok FROM settings WHERE key = 'migrated_counts'").first();
+  if (!done) await env.DB.batch(MIGRATE_COUNTS.map((q) => env.DB.prepare(q)));
+  schemaReady = true;
+}
+const isLocal = (url) => url.hostname === "localhost" || url.hostname === "127.0.0.1";
+/* The address Google should index (set SITE_ORIGIN in wrangler.jsonc); other addresses such as *.workers.dev are marked noindex. */
+const siteOrigin = (env, url) => (isLocal(url) ? url.origin : env.SITE_ORIGIN || url.origin);
+async function limited(binding, key) {
+  if (!binding) return false;
+  try {
+    const { success } = await binding.limit({ key });
+    return !success;
+  } catch {
+    return false; // never block real visitors because the limiter itself failed
+  }
+}
 
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
+    // Always encrypted: http:// forwards to https:// (the admin cookie is only ever sent over https)
+    if (url.protocol === "http:" && !isLocal(url)) {
+      url.protocol = "https:";
+      return Response.redirect(url.toString(), 301);
+    }
     // One address for Google: www.example.com always forwards to example.com
     if (url.hostname.startsWith("www.")) {
       url.hostname = url.hostname.slice(4);
       return Response.redirect(url.toString(), 301);
     }
-    try {
-      if (!schemaReady) {
-        await env.DB.exec(SCHEMA.replace(/\n/g, " "));
-        schemaReady = true;
-      }
-      const p = url.pathname;
-
-      if (p === "/api/site" && req.method === "GET")
-        return await json(publicSite(await loadSite(env)), 200, { "Cache-Control": "public, max-age=20" });
-      if (p === "/api/track" && req.method === "POST") return await track(req, env);
-      if (p.startsWith("/media/") && (req.method === "GET" || req.method === "HEAD")) return await media(p.slice(7), req, env);
-      if (p === "/sitemap.xml") return await sitemap(url);
-      if (p === "/robots.txt")
-        return new Response(`User-agent: *\nDisallow: /admin/\nDisallow: /api/\n\nSitemap: ${url.origin}/sitemap.xml\n`, {
-          headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" }
-        });
-      if (p === "/" || p === "/index.html") return await homePage(req, env, url);
-
-      if (p.startsWith("/api/admin/")) {
-        const route = p.slice("/api/admin/".length);
-        if (req.method !== "GET" && !sameOrigin(req, url)) return json({ error: "bad_origin" }, 403);
-        if (route === "login" && req.method === "POST") return await login(req, env);
-
-        const session = await getSession(req, env);
-        if (!session) return json({ error: "unauthorized" }, 401);
-
-        if (route === "me" && req.method === "GET") return await me(env);
-        if (route === "logout" && req.method === "POST") return await logout(req, env);
-        if (route === "password" && req.method === "POST") return await changePassword(req, env);
-        if (route === "site" && req.method === "GET") return json(await loadSite(env), 200, { "Cache-Control": "no-store" });
-        if (route === "site" && req.method === "PUT") return await saveSite(req, env, ctx);
-        if (route === "upload" && req.method === "POST") return await upload(req, env, url);
-        if (route === "stats" && req.method === "GET") return await stats(url, env);
-        if (route === "stats" && req.method === "DELETE") return await clearStats(url, env);
-        return json({ error: "not_found" }, 404);
-      }
-      if (p.startsWith("/api/")) return json({ error: "not_found" }, 404);
-      return await env.ASSETS.fetch(req);
-    } catch (err) {
-      if (err instanceof HttpError) return json({ error: err.code }, err.status);
-      console.error((err && err.stack) || err);
-      return json({ error: "server_error" }, 500);
+    const res = await route(req, env, ctx, url);
+    // Copies of the site on other addresses (e.g. *.workers.dev) must not compete with the real domain in Google
+    if (env.SITE_ORIGIN && !isLocal(url) && url.origin !== env.SITE_ORIGIN) {
+      const r = new Response(res.body, res);
+      r.headers.set("X-Robots-Tag", "noindex, nofollow");
+      return r;
     }
+    return res;
   }
 };
+
+async function route(req, env, ctx, url) {
+  try {
+    const p = url.pathname;
+
+    if (p === "/api/site" && req.method === "GET")
+      return await json(publicSite(await loadSite(env, ctx)), 200, { "Cache-Control": "public, max-age=20" });
+    if (p === "/api/track" && req.method === "POST") return await track(req, env, ctx, url);
+    if (p.startsWith("/media/") && (req.method === "GET" || req.method === "HEAD")) return await media(p.slice(7), req, env);
+    if (p === "/sitemap.xml") return await sitemap(siteOrigin(env, url));
+    if (p === "/robots.txt") {
+      const o = siteOrigin(env, url);
+      const body =
+        url.origin === o
+          ? `User-agent: *\nDisallow: /admin/\nDisallow: /api/\n\nSitemap: ${o}/sitemap.xml\n`
+          : "User-agent: *\nDisallow: /\n";
+      return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
+    }
+    if (p === "/" || p === "/index.html") return await homePage(req, env, url, ctx);
+
+    if (p.startsWith("/api/admin/")) {
+      const route = p.slice("/api/admin/".length);
+      if (req.method !== "GET" && !sameOrigin(req, url)) return json({ error: "bad_origin" }, 403);
+      await ensureSchema(env);
+      if (route === "login" && req.method === "POST") return await login(req, env);
+
+      const session = await getSession(req, env);
+      if (!session) return json({ error: "unauthorized" }, 401);
+
+      if (route === "me" && req.method === "GET") return await me(env);
+      if (route === "logout" && req.method === "POST") return await logout(req, env);
+      if (route === "password" && req.method === "POST") return await changePassword(req, env);
+      if (route === "site" && req.method === "GET") {
+        const { site, updated } = await readSiteRow(env);
+        return json(site, 200, { "Cache-Control": "no-store", "X-Site-Updated": String(updated) });
+      }
+      if (route === "site" && req.method === "PUT") return await saveSite(req, env, ctx);
+      if (route === "upload" && req.method === "POST") return await upload(req, env, url);
+      if (route === "stats" && req.method === "GET") return await stats(url, env);
+      if (route === "stats" && req.method === "DELETE") return await clearStats(url, env);
+      return json({ error: "not_found" }, 404);
+    }
+    if (p.startsWith("/api/")) return json({ error: "not_found" }, 404);
+    return await env.ASSETS.fetch(req);
+  } catch (err) {
+    if (err instanceof HttpError) return json({ error: err.code }, err.status);
+    console.error((err && err.stack) || err);
+    return json({ error: "server_error" }, 500);
+  }
+}
 
 /* ------------------------------------------------------------------ helpers */
 function json(data, status = 200, headers = {}) {
@@ -126,11 +180,31 @@ async function pbkdf2(password, saltB64, iterations) {
   const salt = Uint8Array.from(atob(saltB64), (c) => c.charCodeAt(0));
   return b64(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations }, key, 256));
 }
+/* Reads at most `max` bytes, even when the sender gives no Content-Length, so huge bodies cannot exhaust memory. */
 async function readJson(req, max = 512 * 1024) {
   const len = Number(req.headers.get("Content-Length") || 0);
   if (len > max) throw new HttpError(413, "too_large");
-  const text = await req.text();
-  if (text.length > max) throw new HttpError(413, "too_large");
+  if (!req.body) throw new HttpError(400, "bad_json");
+  const reader = req.body.getReader();
+  const parts = [];
+  let got = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    got += value.length;
+    if (got > max) {
+      reader.cancel().catch(() => {});
+      throw new HttpError(413, "too_large");
+    }
+    parts.push(value);
+  }
+  const buf = new Uint8Array(got);
+  let off = 0;
+  parts.forEach((c) => {
+    buf.set(c, off);
+    off += c.length;
+  });
+  const text = new TextDecoder().decode(buf);
   try {
     return JSON.parse(text);
   } catch {
@@ -156,9 +230,49 @@ const ipKey = async (req, env) => sha256((req.headers.get("CF-Connecting-IP") ||
 const escHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
 /* ------------------------------------------------------------------ site data */
-async function loadSite(env) {
-  const row = await env.DB.prepare("SELECT value FROM settings WHERE key = 'site'").first();
-  return row ? JSON.parse(row.value) : SEED;
+/* Always straight from the database (dashboard). Throws if D1 is unavailable, so the dashboard never edits a stale copy. */
+async function readSiteRow(env) {
+  await ensureSchema(env);
+  const row = await env.DB.prepare("SELECT value, updated_at FROM settings WHERE key = 'site'").first();
+  return row ? { site: JSON.parse(row.value), updated: row.updated_at } : { site: SEED, updated: 0 };
+}
+/* Public pages: short memory cache, and if the database fails (outage or daily free limit reached) the site still opens
+   with the last good copy (memory → Cloudflare cache → built-in seed) instead of an error page. */
+async function loadSite(env, ctx) {
+  if (siteMem && Date.now() - siteMemAt < SITE_TTL) return siteMem;
+  try {
+    const { site } = await readSiteRow(env);
+    const text = JSON.stringify(site);
+    siteMem = site;
+    siteMemAt = Date.now();
+    if (text !== siteMemJson) {
+      siteMemJson = text;
+      if (ctx && typeof caches !== "undefined")
+        ctx.waitUntil(
+          caches.default
+            .put(
+              BACKUP_KEY,
+              new Response(text, { headers: { "Content-Type": "application/json", "Cache-Control": "public, max-age=2592000" } })
+            )
+            .catch(() => {})
+        );
+    }
+    return site;
+  } catch (err) {
+    console.error("loadSite fallback:", (err && err.message) || err);
+    if (siteMem) return siteMem;
+    try {
+      const hit = typeof caches !== "undefined" && (await caches.default.match(BACKUP_KEY));
+      if (hit) {
+        siteMem = await hit.json();
+        siteMemAt = Date.now() - SITE_TTL + 5000; // try the database again in a few seconds
+        return siteMem;
+      }
+    } catch {
+      /* ignore */
+    }
+    return SEED;
+  }
 }
 /* Hidden services, works and tracks never leave the server. */
 function publicSite(site) {
@@ -401,13 +515,22 @@ export function sanitizeSite(input) {
 
 async function saveSite(req, env, ctx) {
   const site = sanitizeSite(await readJson(req));
+  // Two devices editing at once: refuse to silently overwrite changes saved from the other device
+  const base = req.headers.get("X-Base-Updated");
+  if (base != null && req.headers.get("X-Force") !== "1") {
+    const cur = await env.DB.prepare("SELECT updated_at FROM settings WHERE key = 'site'").first();
+    if (String(cur ? cur.updated_at : 0) !== base) return json({ error: "conflict" }, 409);
+  }
+  const now = Date.now();
   await env.DB.prepare(
     "INSERT INTO settings (key, value, updated_at) VALUES ('site', ?1, ?2) ON CONFLICT(key) DO UPDATE SET value = ?1, updated_at = ?2"
   )
-    .bind(JSON.stringify(site), Date.now())
+    .bind(JSON.stringify(site), now)
     .run();
+  siteMem = site;
+  siteMemAt = Date.now();
   ctx.waitUntil(cleanupMedia(env, site));
-  return json({ ok: true, site });
+  return json({ ok: true, site, updated: now });
 }
 
 /* Delete uploaded files that are no longer used (older than 1 hour, so fresh uploads survive until saved). */
@@ -426,17 +549,17 @@ async function cleanupMedia(env, site) {
 }
 
 /* ------------------------------------------------------------------ home page: SEO data rendered on the server */
-async function homePage(req, env, url) {
+async function homePage(req, env, url, ctx) {
   const res = await env.ASSETS.fetch(new Request(new URL("/", url), { headers: req.headers }));
   if (!res.ok) return res;
-  const site = publicSite(await loadSite(env));
+  const site = publicSite(await loadSite(env, ctx));
   const lang = LANGS.includes(url.searchParams.get("lang")) ? url.searchParams.get("lang") : site.defaultLang;
   const T = (o) => (o && (o[lang] || o.de || o.en || o.ar)) || "";
   const brand = lang === "ar" && site.nameAr ? site.nameAr : site.name;
   const full = `${brand} – ${T(site.tagline)}`;
   const title = full.length <= 60 ? full : brand.slice(0, 60);
   const desc = (T(site.seoDesc) || `${T(site.tagline)}: ${site.services.map((s) => T(s.name)).join(", ")}`).slice(0, 158);
-  const origin = url.origin;
+  const origin = siteOrigin(env, url);
   const ld = {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
@@ -561,8 +684,7 @@ function htmlHeaders(res, lang) {
   return h;
 }
 
-function sitemap(url) {
-  const o = url.origin;
+function sitemap(o) {
   const pages = ["/", "/?lang=ar", "/?lang=de", "/?lang=en", "/impressum.html", "/datenschutz.html"];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${pages.map((p) => `<url><loc>${escHtml(o + p)}</loc></url>`).join("\n")}\n</urlset>`;
   return new Response(xml, { headers: { "Content-Type": "application/xml; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
@@ -682,20 +804,52 @@ async function media(key, req, env) {
 }
 
 /* ------------------------------------------------------------------ tracking (no names, numbers or IPs are stored) */
-async function track(req, env) {
+/* Counted per day (one row per day/type/item/language), not one row per click.
+   Abuse limits: requests from other websites are ignored, each visitor is rate-limited,
+   only items that really exist on the site are accepted, and there is a daily ceiling. */
+async function track(req, env, ctx, url) {
+  const done = () => new Response(null, { status: 204 });
+  const origin = req.headers.get("Origin");
+  if (origin && origin !== url.origin) return done();
+  if (await limited(env.TRACK_LIMIT, await ipKey(req, env))) return done();
   let body;
   try {
-    body = await readJson(req, 2048);
+    body = await readJson(req, 1024);
   } catch {
-    return new Response(null, { status: 204 });
+    return done();
   }
+  if (!body || typeof body !== "object") return done();
   const type = EVENT_TYPES.includes(body.type) ? body.type : null;
-  if (!type) return new Response(null, { status: 204 });
-  const ref = typeof body.ref === "string" && /^[a-z0-9-]{1,40}$/.test(body.ref) ? body.ref : null;
-  await env.DB.prepare("INSERT INTO events (type, day, ts, lang, ref) VALUES (?, ?, ?, ?, ?)")
-    .bind(type, today(env), Date.now(), LANGS.includes(body.lang) ? body.lang : null, ref)
-    .run();
-  return new Response(null, { status: 204 });
+  if (!type) return done();
+  let ref = "";
+  if (typeof body.ref === "string" && body.ref) {
+    const site = await loadSite(env, ctx);
+    const known = new Set([
+      ...site.services.map((x) => x.id),
+      ...site.works.map((x) => x.id),
+      "youtube",
+      "facebook",
+      "instagram",
+      "tiktok",
+      "email",
+      "whatsapp"
+    ]);
+    if (known.has(body.ref)) ref = body.ref;
+  }
+  const lang = LANGS.includes(body.lang) ? body.lang : "";
+  try {
+    await ensureSchema(env);
+    const day = today(env);
+    const up =
+      "INSERT INTO counts (day, type, ref, lang, n) SELECT ?1, ?2, ?3, ?4, 1 WHERE COALESCE((SELECT n FROM counts WHERE day = ?1 AND type = '_total' AND ref = '' AND lang = ''), 0) < ?5 ON CONFLICT(day, type, ref, lang) DO UPDATE SET n = n + 1";
+    await env.DB.batch([
+      env.DB.prepare(up).bind(day, type, ref, lang, DAILY_EVENT_CAP),
+      env.DB.prepare(up).bind(day, "_total", "", "", DAILY_EVENT_CAP)
+    ]);
+  } catch (err) {
+    console.error("track:", (err && err.message) || err); // statistics are optional; never fail the visitor
+  }
+  return done();
 }
 
 /* ------------------------------------------------------------------ auth */
@@ -743,6 +897,8 @@ async function setPassword(env, password, mustChange) {
 
 async function login(req, env) {
   const ip = await ipKey(req, env);
+  // Stops many password guesses fired at the same moment (before the 5-attempt lock can count them)
+  if (await limited(env.LOGIN_LIMIT, "login:" + ip)) return json({ error: "locked", minutes: 1 }, 429);
   const now = Date.now();
   const fails = await env.DB.prepare("SELECT COUNT(*) AS n, MIN(ts) AS first FROM login_attempts WHERE ip = ? AND ts > ?")
     .bind(ip, now - FAIL_WINDOW)
@@ -800,6 +956,7 @@ async function logout(req, env) {
 }
 
 async function changePassword(req, env) {
+  if (await limited(env.LOGIN_LIMIT, "pw:" + (await ipKey(req, env)))) return json({ error: "locked", minutes: 1 }, 429);
   let body;
   try {
     body = await readJson(req, 2048);
@@ -831,22 +988,21 @@ async function stats(url, env) {
     to = `${year}-12-31`;
   const [byMonth, services, socials, years] = await env.DB.batch([
     env.DB.prepare(
-      "SELECT type, CAST(substr(day, 6, 2) AS INTEGER) AS m, COUNT(*) AS n FROM events WHERE day BETWEEN ? AND ? GROUP BY type, m"
+      "SELECT type, CAST(substr(day, 6, 2) AS INTEGER) AS m, SUM(n) AS n FROM counts WHERE day BETWEEN ? AND ? AND type != '_total' GROUP BY type, m"
     ).bind(from, to),
     env.DB.prepare(
-      "SELECT ref, COUNT(*) AS n FROM events WHERE type = 'service' AND day BETWEEN ? AND ? GROUP BY ref ORDER BY n DESC"
+      "SELECT NULLIF(ref, '') AS ref, SUM(n) AS n FROM counts WHERE type = 'service' AND day BETWEEN ? AND ? GROUP BY ref ORDER BY n DESC"
     ).bind(from, to),
-    env.DB.prepare("SELECT ref, COUNT(*) AS n FROM events WHERE type = 'social' AND day BETWEEN ? AND ? GROUP BY ref ORDER BY n DESC").bind(
-      from,
-      to
-    ),
-    env.DB.prepare("SELECT DISTINCT substr(day, 1, 4) AS y FROM events ORDER BY y DESC")
+    env.DB.prepare(
+      "SELECT NULLIF(ref, '') AS ref, SUM(n) AS n FROM counts WHERE type = 'social' AND day BETWEEN ? AND ? GROUP BY ref ORDER BY n DESC"
+    ).bind(from, to),
+    env.DB.prepare("SELECT DISTINCT substr(day, 1, 4) AS y FROM counts ORDER BY y DESC")
   ]);
   const months = Array.from({ length: 12 }, (_, i) => ({ m: i + 1, ...Object.fromEntries(EVENT_TYPES.map((t) => [t, 0])) }));
   const totals = Object.fromEntries(EVENT_TYPES.map((t) => [t, 0]));
   byMonth.results.forEach((r) => {
     const mo = months[r.m - 1];
-    if (mo) {
+    if (mo && r.type in totals) {
       mo[r.type] = r.n;
       totals[r.type] += r.n;
     }
@@ -861,6 +1017,6 @@ async function stats(url, env) {
 }
 async function clearStats(url, env) {
   const year = yearOf(url);
-  await env.DB.prepare("DELETE FROM events WHERE day BETWEEN ? AND ?").bind(`${year}-01-01`, `${year}-12-31`).run();
+  await env.DB.prepare("DELETE FROM counts WHERE day BETWEEN ? AND ?").bind(`${year}-01-01`, `${year}-12-31`).run();
   return json({ ok: true });
 }
