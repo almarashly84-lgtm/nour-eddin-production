@@ -78,3 +78,10 @@ python3 tools/icons.py  # إعادة بناء الأيقونات وأغلفة ا
 ```
 
 ملفات `/assets/` و `/fonts/` تُحفظ في المتصفح سنة كاملة. عند تعديلها غيّر `?v=` في روابطها داخل ملفات HTML.
+
+## النشر على حساب Cloudflare الخاص بالزبون (GitHub Actions)
+
+الملف `.github/workflows/deploy-nour-account.yml` ينشر الموقع على حساب نور الدين عند كل تحديث على `main`.
+يحتاج سرّين في GitHub → Settings → Secrets and variables → Actions: `CLOUDFLARE_API_TOKEN` و`CLOUDFLARE_ACCOUNT_ID` (من حساب الزبون).
+في التشغيل الأول ينشئ قاعدة البيانات `nour-db` ومخزن الملفات `nour-media` تلقائيًا.
+التشغيل اليدوي (Run workflow) مع خيار `copy_media` ينسخ الصور والموسيقى والفيديوهات المرفوعة من الموقع القديم، مرة واحدة قبل نقل الدومين.

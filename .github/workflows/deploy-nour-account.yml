@@ -1,0 +1,99 @@
+# Deploys the site to Nour Eddin's own Cloudflare account on every push to main.
+# Needs two repository secrets (Settings → Secrets and variables → Actions):
+#   CLOUDFLARE_API_TOKEN   – token from Nour Eddin's account (Workers Scripts, Workers R2 Storage, D1: Edit)
+#   CLOUDFLARE_ACCOUNT_ID  – Nour Eddin's account ID
+# Until both exist the workflow does nothing (no failed runs).
+name: Deploy to Nour Eddin Cloudflare
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      copy_media:
+        description: "Copy uploaded photos/music/videos from the old site (once, before moving the domain)"
+        type: boolean
+        default: false
+      old_site:
+        description: "Old site to copy the media from"
+        type: string
+        default: "https://nour-eddin.com"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-nour-account
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Check the Cloudflare secrets
+        id: guard
+        run: |
+          if [ -z "$CLOUDFLARE_API_TOKEN" ] || [ -z "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "::notice::CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID are not set yet - nothing deployed."
+            echo "ok=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.guard.outputs.ok == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.guard.outputs.ok == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        if: steps.guard.outputs.ok == 'true'
+        run: npm ci
+
+      - name: Database (D1) and file storage (R2) - created on the first run
+        if: steps.guard.outputs.ok == 'true'
+        run: |
+          set -euo pipefail
+          find_db() { npx wrangler d1 list --json | jq -r '.[] | select(.name=="nour-db") | (.uuid // .id)' | head -n1; }
+          id="$(find_db)"
+          if [ -z "$id" ]; then
+            npx wrangler d1 create nour-db --location weur
+            id="$(find_db)"
+          fi
+          if [ -z "$id" ]; then echo "::error::The D1 database nour-db could not be created."; exit 1; fi
+          if ! npx wrangler r2 bucket info nour-media >/dev/null 2>&1; then
+            npx wrangler r2 bucket create nour-media || { echo "::error::R2 bucket could not be created. Open R2 once in the Cloudflare dashboard of this account and activate it, then run again."; exit 1; }
+          fi
+          sed -i -E "s/\"database_id\": \"[0-9a-f-]+\"/\"database_id\": \"$id\"/" wrangler.jsonc
+          grep -q "\"database_id\": \"$id\"" wrangler.jsonc
+          echo "D1 nour-db: $id"
+
+      - name: Deploy
+        if: steps.guard.outputs.ok == 'true'
+        run: npx wrangler deploy
+
+      - name: Copy media from the old site
+        if: steps.guard.outputs.ok == 'true' && inputs.copy_media
+        env:
+          OLD: ${{ inputs.old_site }}
+        run: |
+          set -euo pipefail
+          keys="$(curl -fsSL "$OLD/api/site" | grep -oE '/media/[a-z0-9-]+\.(webp|jpg|png|mp3|m4a|mp4|webm)' | sort -u | sed 's#^/media/##')"
+          [ -n "$keys" ] || { echo "No media files referenced on $OLD"; exit 0; }
+          for k in $keys; do
+            case "$k" in
+              *.webp) ct=image/webp ;; *.jpg) ct=image/jpeg ;; *.png) ct=image/png ;;
+              *.mp3) ct=audio/mpeg ;; *.m4a) ct=audio/mp4 ;; *.mp4) ct=video/mp4 ;; *.webm) ct=video/webm ;;
+            esac
+            curl -fsSL "$OLD/media/$k" -o "$RUNNER_TEMP/$k"
+            npx wrangler r2 object put "nour-media/$k" --file "$RUNNER_TEMP/$k" --remote \
+              --content-type "$ct" --cache-control "public, max-age=31536000, immutable"
+            echo "copied $k"
+          done
